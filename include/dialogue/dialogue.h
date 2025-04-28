@@ -1,5 +1,5 @@
-#ifndef DIALOG_H
-#define DIALOG_H
+#ifndef DIALOGUE_H
+#define DIALOGUE_H
 
 void print_options();
 char* get_str();

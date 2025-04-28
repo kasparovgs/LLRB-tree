@@ -1,58 +1,60 @@
 TARGET = lab
 CC = gcc
-FLAGS = -g
+CFLAGS = -g -Iinclude
+
+SRC_DIR = src
+OBJ_DIR = obj
+BIN_DIR = bin
+
+LLRB_DIR = $(SRC_DIR)/llrb
+CMD_DIR = $(SRC_DIR)/cmd
+DIALOGUE_DIR = $(SRC_DIR)/dialogue
+LOGIC_DIR = $(SRC_DIR)/logic
 
 ifeq ($(lib-type), s)
-	LIB_EXTENSION = .a
-	COMP = 
+    LIB_EXTENSION = .a
+    COMP = 
 else
-	LIB_EXTENSION = .so
-	COMP = -Wl,-rpath,.
+    LIB_EXTENSION = .so
+    COMP = -Wl,-rpath,../$(OBJ_DIR)
 endif
 
-LIBRARY = lib$(TARGET)$(LIB_EXTENSION)
+LIBRARY = $(OBJ_DIR)/lib$(TARGET)$(LIB_EXTENSION)
 
-$(TARGET) : $(LIBRARY) main.o dial.o log.o
-	$(CC) main.o dial.o log.o -L. -l$(TARGET) -o $(TARGET) $(COMP) $(FLAGS)
+OBJ = $(OBJ_DIR)/main.o $(OBJ_DIR)/dialogue.o $(OBJ_DIR)/logic.o
+LIB_OBJ = $(OBJ_DIR)/llrbtree.o
 
-$(LIBRARY) : llrbtree.o
-ifeq ($(lib-type), s)
-	ar rcs $(LIBRARY) llrbtree.o
+all: dirs $(BIN_DIR)/$(TARGET)
+
+dirs:
+	mkdir -p $(OBJ_DIR)
+	mkdir -p $(BIN_DIR)
+
+$(BIN_DIR)/$(TARGET): $(LIBRARY) $(OBJ)
+	$(CC) $(OBJ) -L$(OBJ_DIR) -l$(TARGET) -o $@ $(COMP) $(CFLAGS)
+
+$(LIBRARY): $(LIB_OBJ)
+ifeq ($(lib-type), d)
+	$(CC) -shared -o $@ $^
 else
-	$(CC) -shared -o $(LIBRARY) llrbtree.o
+	ar rcs $@ $^
 endif
 
-llrbtree.o : llrbtree.c
+$(OBJ_DIR)/main.o: $(CMD_DIR)/main.c
+	$(CC) -c $< -o $@ $(CFLAGS)
 
-ifeq ($(lib-type), s)
-	$(CC) -c llrbtree.c -o llrbtree.o
+$(OBJ_DIR)/dialogue.o: $(DIALOGUE_DIR)/dialogue.c
+	$(CC) -c $< -o $@ $(CFLAGS)
+
+$(OBJ_DIR)/logic.o: $(LOGIC_DIR)/logic.c
+	$(CC) -c $< -o $@ $(CFLAGS)
+
+$(OBJ_DIR)/llrbtree.o: $(LLRB_DIR)/llrbtree.c
+ifeq ($(lib-type), d)
+	$(CC) -c -fPIC $< -o $@ $(CFLAGS)
 else
-	$(CC) -c -fPIC llrbtree.c -o llrbtree.o
+	$(CC) -c $< -o $@ $(CFLAGS)
 endif
 
-main.o : main.c
-
-ifeq ($(lib-type), s)
-	$(CC) -c main.c -o main.o
-else
-	$(CC) -c -fPIC main.c -o main.o
-endif
-
-dial.o : dial.c
-
-ifeq ($(lib-type), s)
-	$(CC) -c dial.c -o dial.o
-else
-	$(CC) -c -fPIC dial.c -o dial.o
-endif
-
-log.o : log.c
-
-ifeq ($(lib-type), s)
-	$(CC) -c log.c -o log.o
-else
-	$(CC) -c -fPIC log.c -o log.o
-endif
-
-clean :
-	rm $(TARGET) $(LIBRARY) *.o
+clean:
+	rm -rf $(OBJ_DIR) $(BIN_DIR)

@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include "llrbtree.h"
-#include "dialog.h"
+#include "llrb/llrbtree.h"
+#include "dialogue/dialogue.h"
 
 int main(){
 	srand(time(NULL));

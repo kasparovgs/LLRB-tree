@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "llrbtree.h"
-#include "dialog.h"
-#include "logic.h"
+#include "llrb/llrbtree.h"
+#include "dialogue/dialogue.h"
+#include "logic/logic.h"
 
 
 void print_options(){

@@ -1,4 +1,5 @@
 *.txt
 *.dot
 
-lab
+/bin
+/obj

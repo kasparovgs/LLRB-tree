@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include "llrbtree.h"
-#include "logic.h"
+#include "llrb/llrbtree.h"
+#include "logic/logic.h"
 
 #define DELIM ",./!? :;'=+-@#$%^&*()[]{}`“”’…\t \""
 
