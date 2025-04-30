@@ -7,7 +7,7 @@ OBJ_DIR = obj
 BIN_DIR = bin
 
 LLRB_DIR = $(SRC_DIR)/llrb
-CMD_DIR = $(SRC_DIR)/cmd
+CMD_DIR = $(SRC_DIR)/cmd/app
 DIALOGUE_DIR = $(SRC_DIR)/dialogue
 LOGIC_DIR = $(SRC_DIR)/logic
 
